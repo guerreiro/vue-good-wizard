@@ -3,7 +3,7 @@
     <ul class="wizard__steps">
       <li class="wizard__step" :class="{'active': currentStep >= index}" :style="{ width: 100/steps.length + '%' }" v-for="(step, index) of steps">
         <span class="wizard__step__line"></span>
-        <span class="wizard__step__label">{{step.label}}</span>
+        <span class="wizard__step__label">{{ step.label }}</span>
         <span class="wizard__step__indicator"></span>
       </li>
     </ul>
@@ -11,12 +11,12 @@
     <div class="wizard__body">
       <div class="wizard__body__step"><slot :name="currentSlot"></slot></div>
       <div class="wizard__body__actions clearfix">
-        <a v-if="backEnabled" class="wizard__back pull-left" @click="goBack()"> <img src="../images/back.png" alt="next icon"> <span>Back</span> 
+        <a v-if="backEnabled" class="wizard__back pull-left" @click="goBack"> <img src="../images/back.png" alt="next icon"> <span>Back</span> 
         </a>
-        <a v-if="currentStep != steps.length - 1" class="wizard__next pull-right" @click="goNext()">
+        <a v-if="currentStep != steps.length - 1" class="wizard__next pull-right" @click="goNext">
           <span>Next</span> <img src="../images/next.png" alt="next icon">
         </a>
-        <a v-if="currentStep == steps.length - 1" class="wizard__next pull-right final-step" @click="goNext()">
+        <a v-if="currentStep == steps.length - 1" class="wizard__next pull-right final-step" @click="goNext">
           {{finalStepLabel}}
         </a>
       </div>
@@ -26,7 +26,6 @@
 
 <script>
 export default {
-
   name: 'vue-good-wizard',
 
   props: {
@@ -34,50 +33,54 @@ export default {
     finalStepLabel: {default: 'Save'},
     onNext: {},
     onBack: {},
+    onGo: {}
   },
 
   data () {
     return {
-      currentStep: 0,
-    };
+      currentStep: 0
+    }
   },
   computed: {
     arrowPosition() {
-      var stepSize = 100/this.steps.length;
-      var currentStepStart = stepSize * this.currentStep;
-      var currentStepMiddle = currentStepStart + (stepSize/2);
+      const stepSize = 100 / this.steps.length
+      const currentStepStart = stepSize * this.currentStep
+      const currentStepMiddle = currentStepStart + (stepSize / 2)
       return 'calc('+currentStepMiddle+'% - 14px)'
     },
-    currentSlot() {
-      return this.steps[this.currentStep].slot;
-    },
-    backEnabled() {
-      return this.currentStep != 0;
-    }
+    currentSlot() { return this.steps[this.currentStep].slot },
+    backEnabled() { return this.currentStep != 0 }
   },
   methods: {
     goNext (skipFunction) {
-      if (!skipFunction && typeof this.onNext == 'function'){
-        if(!this.onNext(this.currentStep)) {
+      if (!skipFunction && typeof this.onNext === 'function') {
+        if (!this.onNext(this.currentStep)) {
           //returned false. don't do anything
-          return;
+          return
         }
       }
-      if (this.currentStep < this.steps.length-1) {
-        this.currentStep++;
-      }
+      // Increment step
+      if (this.currentStep < this.steps.length - 1) this.currentStep++
     },
     goBack (skipFunction) {
-      if (!skipFunction && typeof this.onBack == 'function'){
-        if(!this.onBack(this.currentStep)) {
+      if (!skipFunction && typeof this.onBack === 'function') {
+        if (!this.onBack(this.currentStep)) {
+          //returned false. don't do anything
+          return
+        }
+      }
+      // Decrement step
+      if (this.currentStep > 0) this.currentStep--
+    },
+    goTo (step, skipFunction) {
+      if (!skipFunction && typeof this.onGo == 'function'){
+        if(!this.onGo(this.currentStep)) {
           //returned false. don't do anything
           return;
         }
       }
-      if (this.currentStep > 0) {
-        this.currentStep--;
-      }
-    },
+      this.currentStep = step
+    }
   },
 };
 </script>
@@ -86,12 +89,12 @@ export default {
 /* Utilities
 *******************************/
 
-.pull-left{
-  float:  left !important;
+.pull-left {
+  float: left !important;
 }
 
-.pull-right{
-  float:  right !important;
+.pull-right {
+  float: right !important;
 }
 
 .clearfix::after {
@@ -107,7 +110,7 @@ export default {
   width:  100%;
 }
 
-.wizard__steps{
+.wizard__steps {
   list-style-type:  none;
   text-align: justify;
   -ms-text-justify: distribute-all-lines;
@@ -124,7 +127,7 @@ export default {
   line-height: 0
 }
 
-.wizard__step{
+.wizard__step {
   height: 70px;
   vertical-align: bottom;
   display: inline-block;
@@ -132,7 +135,7 @@ export default {
   position:  relative;
 }
 
-.wizard__step:not(:first-child) .wizard__step__line{
+.wizard__step:not(:first-child) .wizard__step__line {
   position: absolute;
   width:  100%;
   left:  -50%;
@@ -141,7 +144,7 @@ export default {
   background-color: #b9c7d2;
 }
 
-.wizard__step__indicator{
+.wizard__step__indicator {
   box-sizing: content-box;
   display:  block;
   width:  16px;
@@ -156,22 +159,22 @@ export default {
   z-index: 1;
 }
 
-.wizard__step.active .wizard__step__indicator{
+.wizard__step.active .wizard__step__indicator {
   background-color: #6eb165;
 }
 
-.wizard__step.active:not(:first-child) .wizard__step__line{
+.wizard__step.active:not(:first-child) .wizard__step__line {
   background-color: #6eb165; /* green */
 }
 
-.wizard__step__label{
+.wizard__step__label {
   color:  #98a4af;
   font-weight: bold;
 }
 
 /* Wizard body 
 *******************************/
-.wizard__body{
+.wizard__body {
   margin-top:  30px;
   min-height:  400px;
   margin-left:  50px;
@@ -183,11 +186,11 @@ export default {
   padding-bottom: 50px;
 }
 
-.wizard__body__step{
+.wizard__body__step {
   padding:  16px;
 }
 
-.wizard__arrow{
+.wizard__arrow {
   position:  absolute;
   display: block;
   width:  30px;
@@ -207,7 +210,7 @@ export default {
 
 /* Wizard body 
 *******************************/
-.wizard__body__actions{
+.wizard__body__actions {
   position:  absolute;
   bottom:  0px;
   height:  50px;
@@ -216,7 +219,7 @@ export default {
   background-color: #b9c7d2;
 }
 
-.wizard__body__actions a{
+.wizard__body__actions a {
   width:  120px;
   height:  100%;
   display: block;
@@ -231,16 +234,16 @@ export default {
   transition: background-color 0.3s;
 }
 
-.wizard__body__actions a>img, .wizard__body__actions a>span{
+.wizard__body__actions a>img, .wizard__body__actions a>span {
   display: inline-block;
   vertical-align: middle;
 }
 
-.wizard__body__actions a:hover{
+.wizard__body__actions a:hover {
   background-color: #357fae;
 }
 
-.wizard__body__actions a.final-step{
+.wizard__body__actions a.final-step {
   background-color: #6eb165;
 }
 

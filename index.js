@@ -1,14 +1,12 @@
-import GoodWizard from './components/Wizard.vue';
+import GoodWizard from './components/Wizard.vue'
 
 const GoodWizardPlugin = {
   install: function(Vue, options) {
-    Vue.component(GoodWizard.name, GoodWizard);
-  },
-};
+    Vue.component(GoodWizard.name, GoodWizard)
+  }
+}
 
-export default GoodWizardPlugin;
+export default GoodWizardPlugin
 
 // Automatic installation if Vue has been added to the global scope.
-if (typeof window !== 'undefined' && window.Vue) {
-  window.Vue.use(GoodWizardPlugin);
-}
+if (typeof window !== 'undefined' && window.Vue) window.Vue.use(GoodWizardPlugin)
