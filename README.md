@@ -18,7 +18,7 @@ The plugin is meant to be used with existing VueJS 2.x projects.
 
 Install with npm:
 ```
-npm install --save vue-good-wizard
+npm install --save guerreiro/vue-good-wizard
 ```
 
 import into project:
@@ -38,6 +38,7 @@ Vue.use(VueGoodWizard);
       :steps="steps"
       :onNext="nextClicked" 
       :onBack="backClicked">
+      :onGo="goToClicked">
       <div slot="page1">
         <h4>Step 1</h4>
         <p>This is step 1</p>
@@ -84,13 +85,17 @@ export default {
     };
   },
   methods: {
-    nextClicked(currentPage) {
+    nextClicked (currentPage) {
       console.log('next clicked', currentPage)
-      return true; //return false if you want to prevent moving to next page
+      return true; // return false if you want to prevent moving to next page
     },
-    backClicked(currentPage) {
+    backClicked (currentPage) {
       console.log('back clicked', currentPage);
-      return true; //return false if you want to prevent moving to previous page
+      return true; // return false if you want to prevent moving to previous page
+    },
+    goToClicked (currentPage) {
+      console.log('go to clicked', currentPage);
+      return true; // return false if you want to prevent moving to a specific step
     }
   },
 };
@@ -157,6 +162,23 @@ function(currentPage){
 </pre>
       </td>
     </tr>
+    <tr>
+      <td>
+        onGo (optional)
+      </td>
+      <td>
+        function called before a specific page is shown. Return true to proceed, or false to stay on the same page.
+      </td>
+      <td>
+        function ex: 
+<pre lang="javascript">
+function(currentPage){
+  console.log(currentPage);
+  return true;
+}
+</pre>
+      </td>
+    </tr>
   </tbody>
 </table>
 
@@ -172,7 +194,8 @@ Following is an example of how this can be done using *vue-good-wizard*
       ref="wizard"
       :steps="steps"
       :onNext="nextClicked" 
-      :onBack="backClicked">
+      :onBack="backClicked"
+      :onGo="goToClicked">
       <div slot="page1">
         <h4>Step 1</h4>
         <p>This is step 1</p>
@@ -213,7 +236,7 @@ export default {
     };
   },
   methods: {
-    nextClicked(currentPage) {
+    nextClicked (currentPage) {
       const _this = this;
 
       // if we're on the form page
@@ -236,9 +259,13 @@ export default {
       }
       return true; //return false if you want to prevent moving to next page
     },
-    backClicked(currentPage) {
+    backClicked (currentPage) {
       console.log('back clicked', currentPage);
       return true; //return false if you want to prevent moving to previous page
+    },
+    goToClicked (currentPage) {
+      console.log('go to clicked', currentPage);
+      return true;
     }
   },
 };
