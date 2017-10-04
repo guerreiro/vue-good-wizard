@@ -11,13 +11,13 @@
     <div class="wizard__body">
       <div class="wizard__body__step"><slot :name="currentSlot"></slot></div>
       <div class="wizard__body__actions clearfix">
-        <a v-if="backEnabled" class="wizard__back pull-left" @click="goBack"> <img src="../images/back.png" alt="next icon"> <span>Back</span> 
+        <a v-if="backEnabled" class="wizard__back pull-left" @click="goBack()"> <img src="../images/back.png" alt="next icon"> <span>{{ backLabel }}</span> 
         </a>
-        <a v-if="currentStep != steps.length - 1" class="wizard__next pull-right" @click="goNext">
-          <span>Next</span> <img src="../images/next.png" alt="next icon">
+        <a v-if="currentStep != steps.length - 1" class="wizard__next pull-right" @click="goNext()">
+          <span>{{ nextLabel }}</span> <img src="../images/next.png" alt="next icon">
         </a>
-        <a v-if="currentStep == steps.length - 1" class="wizard__next pull-right final-step" @click="goNext">
-          {{finalStepLabel}}
+        <a v-if="currentStep == steps.length - 1" class="wizard__next pull-right final-step" @click="goNext()">
+          {{ finalStepLabel }}
         </a>
       </div>
     </div>
@@ -30,10 +30,18 @@ export default {
 
   props: {
     steps: {},
-    finalStepLabel: {default: 'Save'},
+    finalStepLabel: { default: 'Save' },
     onNext: {},
     onBack: {},
-    onGo: {}
+    onGo: {},
+    nextLabel: {
+      type: String,
+      default: 'Next'
+    },
+    backLabel: {
+      type: String,
+      default: 'Back'
+    }
   },
 
   data () {
@@ -54,30 +62,21 @@ export default {
   methods: {
     goNext (skipFunction) {
       if (!skipFunction && typeof this.onNext === 'function') {
-        if (!this.onNext(this.currentStep)) {
-          //returned false. don't do anything
-          return
-        }
+        if (!this.onNext(this.currentStep)) return
       }
       // Increment step
       if (this.currentStep < this.steps.length - 1) this.currentStep++
     },
     goBack (skipFunction) {
       if (!skipFunction && typeof this.onBack === 'function') {
-        if (!this.onBack(this.currentStep)) {
-          //returned false. don't do anything
-          return
-        }
+        if (!this.onBack(this.currentStep)) return
       }
       // Decrement step
       if (this.currentStep > 0) this.currentStep--
     },
     goTo (step, skipFunction) {
-      if (!skipFunction && typeof this.onGo == 'function'){
-        if(!this.onGo(this.currentStep)) {
-          //returned false. don't do anything
-          return;
-        }
+      if (!skipFunction && typeof this.onGo == 'function') {
+        if (!this.onGo(this.currentStep)) return
       }
       this.currentStep = step
     }
